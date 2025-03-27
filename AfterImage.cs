@@ -1,6 +1,5 @@
 using UnityEngine;
 using System;
-using UnityEngine;
 
 namespace Fujin.Mobs
 {
@@ -9,12 +8,24 @@ namespace Fujin.Mobs
     {
         private Material _material; 
         private Sprite _sprite;
-        private SpriteRenderer _renderer;
-        public int FrameCount { get; private set; }
+        Mesh _mesh;
+        Matrix4x4 _matrix;
+        public float FrameCount { get; private set; }
+        private static int _lifeSpan;
 
         public AfterImage()
         {
             Reset();
+        }
+
+        public static void SetLifeSpan(int span)
+        {
+            _lifeSpan = span;
+        }
+
+        public static void SetGradient(Gradient g)
+        {
+            _g = g;
         }
 
         public void Reset()
@@ -24,44 +35,61 @@ namespace Fujin.Mobs
         
         public void Setup(SpriteRenderer spriteRenderer, Material material = null)
         {
-            // SpriteRendererを保存（位置情報はRenderSprites()で更新する）
-            _renderer = spriteRenderer;
-            _material = material != null ? material : spriteRenderer.material;
+            _material = material ? material : spriteRenderer.material;
             _sprite = spriteRenderer.sprite;
+            
+            _matrix = spriteRenderer.transform.localToWorldMatrix;
+
+            _mesh = CreateSpriteMesh(_sprite);
+
+            _propertyBlock ??= new MaterialPropertyBlock();
+            _propertyBlock.SetColor(ColorIndex, _g?.Evaluate(0) ?? Color.white);
+            
+            Graphics.DrawMesh(
+                _mesh,
+                _matrix,
+                _material,
+                0 ,
+                null,
+                0,
+                _propertyBlock
+            );
         }
+
+        private MaterialPropertyBlock _propertyBlock;
+        private static readonly int ColorIndex = Shader.PropertyToID("_Color");
+        private static Gradient _g;
         
         public void RenderSprites()
         {
-            if (_sprite == null || _material == null || _renderer == null) return;
-
-            Matrix4x4 matrix = _renderer.transform.localToWorldMatrix;
-
-            Mesh spriteMesh = CreateSpriteMesh(_sprite);
-
+            _propertyBlock ??= new MaterialPropertyBlock();
+            if (_lifeSpan != 0)
+            {
+                _propertyBlock.SetColor(ColorIndex, _g?.Evaluate(FrameCount / _lifeSpan) ?? Color.white);
+            }
+            
             Graphics.DrawMesh(
-                spriteMesh,
-                matrix,
+                _mesh,
+                _matrix,
                 _material,
-                0 
+                0 ,
+                null,
+                0,
+                _propertyBlock
             );
-            FrameCount++;
-        }
 
-        /// <summary>
-        /// スプライトからMeshを生成する
-        /// </summary>
+            FrameCount += Time.timeScale;
+        }
+        
         private Mesh CreateSpriteMesh(Sprite sprite)
         {
             Mesh mesh = new Mesh();
             
-            // 頂点情報（スプライトの形）
             Vector3[] vertices = Array.ConvertAll(sprite.vertices, v => (Vector3)v);
             mesh.vertices = vertices;
 
-            // UV情報（テクスチャのマッピング）
             mesh.uv = sprite.uv;
 
-            // 三角形インデックス（スプライトのポリゴン情報）
             mesh.triangles = Array.ConvertAll(sprite.triangles, i => (int)i);
 
             return mesh;

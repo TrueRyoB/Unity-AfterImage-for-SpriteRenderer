@@ -8,25 +8,28 @@ namespace Fujin.Player
     {
         [SerializeField] Material material;
         [SerializeField] int duration = 150;
+        [SerializeField] private int intervalFrames = 2;
+        [SerializeField] private Gradient gradient;
 
         private SpriteRenderer _spriteRenderer;
         private readonly Stack<AfterImage> _pool = new Stack<AfterImage>();
         private readonly Queue<AfterImage> _renderQueue = new Queue<AfterImage>();
 
-        void Awake()
+        private void Awake()
         {
             _spriteRenderer = GetComponent<SpriteRenderer>();
             if (_spriteRenderer == null)
             {
-                Debug.Log("It's null!");
+                Debug.Log("Sprite Renderer not found!!");
             }
+            AfterImage.SetLifeSpan(duration);
+            AfterImage.SetGradient(gradient);
         }
 
         private Vector3 _oldPosition;
         private int _count;
-        private readonly int _intervalFrames = 5;
 
-        void Update()
+        private void Update()
         {
             Render();
             
@@ -36,7 +39,7 @@ namespace Fujin.Player
                 _count = 0;
                 return;
             }
-            if (_count >= _intervalFrames)
+            if (_count >= intervalFrames)
             {
                 _count = 0;
                 Enqueue();
@@ -45,7 +48,7 @@ namespace Fujin.Player
             _count++;
         }
 
-        public void Render()
+        private void Render()
         {
             for (int i = 0; i < _renderQueue.Count; i++)
             {
@@ -67,9 +70,9 @@ namespace Fujin.Player
         public void Enqueue()
         {
             AfterImage afterimage = (_pool.Count > 0) ? _pool.Pop() : new AfterImage();
+            
             afterimage.Setup(_spriteRenderer);
             _renderQueue.Enqueue(afterimage);
-            Debug.Log("Enqueued another afterimage!");
-        } 
+        }
     }
 }
