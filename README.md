@@ -1,7 +1,7 @@
 ![](https://img.shields.io/badge/license-MIT-green)
 
 # Unity Afterimage Effects for SpriteRenderer
-Decided to create a custom afterimage generator after kr405/UnityAfterimageEffects for SpriteRenderer users.<br>
+Decided to create a custom afterimage generator after [kr405/UnityAfterimageEffects](https://github.com/kr405/UnityAfterimageEffects) for SpriteRenderer users.<br>
 This program is adjusted for the timeScale issue.<br>
 
 # Demo
