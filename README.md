@@ -12,4 +12,5 @@ Attach PlayerAfterimageRenderer to the playable character gameObject.
 Call "Enqueue()" as you need.
 
 Parameters you may modify on inspector:
+
 <img src="https://github.com/TrueRyoB/Unity-AfterImage-for-SpriteRenderer/blob/main/another%20cool%20screenshot.png" width="500px">
