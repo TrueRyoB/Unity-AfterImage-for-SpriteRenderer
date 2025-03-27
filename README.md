@@ -8,8 +8,8 @@ Decided to create a custom afterimage generator after kr405/UnityAfterimageEffec
 WE GAMING (Color.red at t = 0 and Color.blue at t = 1)
 
 # How to use
-Attach PlayerAfterimageRenderer to the playable character gameObject.
-Call "Enqueue()" as you need.
++Attach PlayerAfterimageRenderer to the playable character gameObject.
++Call "SetShouldEnqueue()" to switch the generating state.
 
 Parameters you may modify on inspector:
 
