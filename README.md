@@ -9,6 +9,7 @@ This program is adjusted for the timeScale issue.<br>
 WE GAMING (Color.red at t = 0 and Color.blue at t = 1)<br>
 
 # How to use
+Import everything but screenshots and readme to your project.<br>
 Attach PlayerAfterimageRenderer to the playable character gameObject.<br>
 Call "SetShouldEnqueue()" to switch the generating state (is set false by default!).<br>
 
