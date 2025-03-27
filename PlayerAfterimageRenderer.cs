@@ -20,32 +20,39 @@ namespace Fujin.Player
             _spriteRenderer = GetComponent<SpriteRenderer>();
             if (_spriteRenderer == null)
             {
-                Debug.Log("Sprite Renderer not found!!");
+                Debug.LogError("Sprite Renderer not found!!");
             }
+            
             AfterImage.SetLifeSpan(duration);
             AfterImage.SetGradient(gradient);
+            AfterImage.SetLayer(gameObject.layer);
         }
 
         private Vector3 _oldPosition;
         private int _count;
+        private bool _shouldEnqueue;
+
+        public void SetShouldEnqueue(bool value) => _shouldEnqueue = value;
 
         private void Update()
         {
             Render();
-            
-            //以下テスト用
-            if (transform.position == _oldPosition)
+
+            if (_shouldEnqueue)
             {
-                _count = 0;
-                return;
+                if (transform.position == _oldPosition)
+                {
+                    _count = 0;
+                    return;
+                }
+                if (_count >= intervalFrames)
+                {
+                    _count = 0;
+                    Enqueue();
+                }
+                _oldPosition = transform.position;
+                _count++;
             }
-            if (_count >= intervalFrames)
-            {
-                _count = 0;
-                Enqueue();
-            }
-            _oldPosition = transform.position;
-            _count++;
         }
 
         private void Render()
@@ -67,7 +74,7 @@ namespace Fujin.Player
             }
         }
         
-        public void Enqueue()
+        private void Enqueue()
         {
             AfterImage afterimage = (_pool.Count > 0) ? _pool.Pop() : new AfterImage();
             

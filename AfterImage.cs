@@ -8,25 +8,20 @@ namespace Fujin.Mobs
     {
         private Material _material; 
         private Sprite _sprite;
-        Mesh _mesh;
-        Matrix4x4 _matrix;
+        private Mesh _mesh;
+        private Matrix4x4 _matrix;
         public float FrameCount { get; private set; }
         private static int _lifeSpan;
+        private static int _layer;
 
         public AfterImage()
         {
             Reset();
         }
 
-        public static void SetLifeSpan(int span)
-        {
-            _lifeSpan = span;
-        }
-
-        public static void SetGradient(Gradient g)
-        {
-            _g = g;
-        }
+        public static void SetLayer(int l) => _layer = l;
+        public static void SetLifeSpan(int span) => _lifeSpan = span;
+        public static void SetGradient(Gradient g) => _g = g;
 
         public void Reset()
         {
@@ -49,7 +44,7 @@ namespace Fujin.Mobs
                 _mesh,
                 _matrix,
                 _material,
-                0 ,
+                _layer,
                 null,
                 0,
                 _propertyBlock
@@ -72,7 +67,7 @@ namespace Fujin.Mobs
                 _mesh,
                 _matrix,
                 _material,
-                0 ,
+                _layer,
                 null,
                 0,
                 _propertyBlock
