@@ -10,7 +10,7 @@ WE GAMING (Color.red at t = 0 and Color.blue at t = 1)<br>
 
 # How to use
 Attach PlayerAfterimageRenderer to the playable character gameObject.<br>
-Call "SetShouldEnqueue()" to switch the generating state. (is set false by default!)<br>
+Call "SetShouldEnqueue()" to switch the generating state (is set false by default!).<br>
 
 <br>
 Parameters you may modify on inspector:<br>
